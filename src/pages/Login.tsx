@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { userRepository } from '../services/user.repo';
 
 type LoginStackParamList = {
   Login: undefined;
@@ -14,8 +15,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
-  const handleLogin = () => {
-    if (email === 'teste@email.com' && senha === '123456') {
+  const handleLogin = async () => {
+    const user = await userRepository.login(email, senha);
+
+    if (user && user.email === null) {
       navigation.navigate('List');
     } else {
       Alert.alert('Erro', 'Email ou senha inválidos.');

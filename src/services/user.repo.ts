@@ -19,6 +19,25 @@ class UserRepository {
     return [];
   }
 
+  public async login(email: string, senha: string) {
+    try {
+      const json = await AsyncStorage.getItem(UserRepository.KEY);
+      const users: User[] = JSON.parse(json!);
+
+      let user: User = {} as User;
+
+      for (const u of users) {
+        if (u.email === email && u.password === senha) {
+          user = u;
+        }
+      }
+
+      return user ? user : null;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   public async save(user: User) {
     const list = await this.getUsers();
 

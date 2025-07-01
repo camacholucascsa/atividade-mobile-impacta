@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { userRepository } from '../services/user.repo';
 
 export interface User {
   name: string;
@@ -41,7 +42,7 @@ export default function RegisterPage() {
       password,
     };
 
-    console.log('Novo usuário:', newUser);
+    userRepository.save(newUser);
     Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
   };
 
