@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { User } from '../models/user';
 
 class UserRepository {
@@ -13,52 +12,38 @@ class UserRepository {
     return u1.email === u2.email;
   }
 
-  public async getUsers() {
+  public async getUsers(): Promise<User[]> {
     const json = await AsyncStorage.getItem(UserRepository.KEY);
-    if (json) return JSON.parse(json) as User[];
-    return [];
+    return json ? JSON.parse(json) as User[] : [];
   }
 
-  public async login(email: string, senha: string) {
+  public async login(email: string, senha: string): Promise<User | null> {
     try {
       const json = await AsyncStorage.getItem(UserRepository.KEY);
-      const users: User[] = JSON.parse(json!);
+      if (!json) return null;
 
-      let user: User = {} as User;
+      const users: User[] = JSON.parse(json);
+      const user = users.find(u => u.email === email && u.password === senha);
 
-      for (const u of users) {
-        if (u.email === email && u.password === senha) {
-          user = u;
-        }
-      }
-
-      return user ? user : null;
+      return user ?? null;
     } catch (e) {
-      console.log(e);
+      console.error('Erro ao logar:', e);
+      return null;
     }
   }
 
-  public async save(user: User) {
+  public async save(user: User): Promise<void> {
     const list = await this.getUsers();
 
-    const finded = list.find(p => this.equals(p, user));
-    if (finded) {
-      finded.name = user.name;
-      finded.email = user.email;
+    const index = list.findIndex(p => this.equals(p, user));
+    if (index !== -1) {
+      list[index] = user;
     } else {
       list.push(user);
     }
 
-    this.persist(list);
+    await this.persist(list); 
   }
-
-  // REMOVER??
-  // public async remove(user: User) {
-  //   let list = await this.getUsers();
-  //   list = list.filter(u => !this.equals(u, user));
-
-  //   this.persist(list);
-  // }
 }
 
 export const userRepository = new UserRepository();

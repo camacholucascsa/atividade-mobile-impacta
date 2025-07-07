@@ -16,13 +16,13 @@ export default function LoginPage() {
   const [senha, setSenha] = useState('');
 
   const handleLogin = async () => {
-    const user = await userRepository.login(email, senha);
+  const user = await userRepository.login(email, senha);
 
-    if (user && user.email === null) {
-      navigation.navigate('List');
-    } else {
-      Alert.alert('Erro', 'Email ou senha inválidos.');
-    }
+if (user) {
+  navigation.navigate('List'); // Login OK
+} else {
+  Alert.alert('Erro', 'Email ou senha inválidos.');
+}
   };
 
   return (
