@@ -44,6 +44,29 @@ class UserRepository {
 
     await this.persist(list); 
   }
+
+public async updateUser(updated: User) {
+  const users = await this.getUsers();
+
+  const newList = users.map(user => {
+    if (user.email === updated.email) {
+      return { ...user, ...updated }; // sobrescreve os dados
+    }
+    return user;
+  });
+
+  await this.persist(newList);
+}
+
+  public async setCurrentUser(user: User): Promise<void> {
+    await AsyncStorage.setItem('CURRENT_USER', JSON.stringify(user));
+  }
+
+  public async getCurrentUser(): Promise<User | null> {
+    const json = await AsyncStorage.getItem('CURRENT_USER');
+    return json ? JSON.parse(json) as User : null;
+  }
+
 }
 
 export const userRepository = new UserRepository();

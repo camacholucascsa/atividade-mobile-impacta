@@ -19,9 +19,18 @@ export default function LoginPage() {
   const user = await userRepository.login(email, senha);
 
 if (user) {
-  navigation.navigate('List'); // Login OK
-} else {
-  Alert.alert('Erro', 'Email ou senha inválidos.');
+  navigation.navigate('List'); 
+
+  const handleLogin = async () => {
+  const user = await userRepository.login(email, senha);
+
+  if (user) {
+    await userRepository.setCurrentUser(user); 
+    navigation.navigate('List');
+  } else {
+    Alert.alert('Erro', 'Email ou senha inválidos.');
+  }
+};
 }
   };
 

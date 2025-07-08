@@ -6,6 +6,7 @@ import RegisterPage from './src/pages/Register';
 
 import ListPage from './src/pages/List';
 import LoginPage from './src/pages/Login';
+import EditUserPage from './src/pages/EditUser';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ function LoginStack() {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginPage} options={{ title: 'Login' }} />
       <Stack.Screen name="List" component={ListPage} options={{ title: 'Lista de Usuários' }} />
+      <Stack.Screen name="Edit" component={EditUserPage} options={{ title: 'Editar Usuário' }} />
     </Stack.Navigator>
   );
 }
